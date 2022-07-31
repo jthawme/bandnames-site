@@ -1,0 +1,98 @@
+@mixin small-mobile() {
+  @media screen and (min-width: $small-mobile-breakpoint) {
+    @content;
+  }
+}
+
+@mixin large-mobile() {
+  @media screen and (min-width: $large-mobile-breakpoint) {
+    @content;
+  }
+}
+
+@mixin tablet() {
+  @media screen and (min-width: $tablet-breakpoint) {
+    @content;
+  }
+}
+
+@mixin desktop() {
+  @media screen and (min-width: $desktop-breakpoint) {
+    @content;
+  }
+}
+
+@mixin widescreen() {
+  @media screen and (min-width: $widescreen-breakpoint) {
+    @content;
+  }
+}
+
+@mixin fullhd() {
+  @media screen and (min-width: $fullhd-breakpoint) {
+    @content;
+  }
+}
+
+@mixin between($first, $last) {
+
+  @media screen and (min-width: $first) and (max-width: ($last - 1px)) {
+    @content;
+  }
+}
+
+@function vh($quantity) {
+  @return calc(var(--vh, 1vh) * #{$quantity});
+}
+
+@mixin webp($path) {
+  background-image: url($path + '.png');
+
+  .webp & {
+    background-image: url($path + '.webp');
+  }
+}
+
+@function encodecolor($string) {
+	@if type-of($string) == 'color' {
+        $hex: str-slice(ie-hex-str($string), 4);
+        $string:unquote("#{$hex}");
+    }
+    $string: '%23' + $string;
+	@return $string;
+}
+
+@mixin halftone() {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='black' width='8' height='8'><rect x='0' y='0' width='1' height='1'/><rect x='2' y='0' width='1' height='1'/><rect x='4' y='0' width='1' height='1'/><rect x='6' y='0' width='1' height='1'/><rect x='0' y='4' width='1' height='1'/><rect x='2' y='4' width='1' height='1'/><rect x='4' y='4' width='1' height='1'/><rect x='6' y='4' width='1' height='1'/><rect x='1' y='2' width='1' height='1'/><rect x='3' y='2' width='1' height='1'/><rect x='5' y='2' width='1' height='1'/><rect x='7' y='2' width='1' height='1'/><rect x='1' y='6' width='1' height='1'/><rect x='3' y='6' width='1' height='1'/><rect x='5' y='6' width='1' height='1'/><rect x='7' y='6' width='1' height='1'/></svg>");
+  background-size: 9px;
+
+  @for $i from 1 through 3 {
+    .color-#{$i} & {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='#{encodecolor(nth($colors-front, $i))}' width='8' height='8'><rect x='0' y='0' width='1' height='1'/><rect x='2' y='0' width='1' height='1'/><rect x='4' y='0' width='1' height='1'/><rect x='6' y='0' width='1' height='1'/><rect x='0' y='4' width='1' height='1'/><rect x='2' y='4' width='1' height='1'/><rect x='4' y='4' width='1' height='1'/><rect x='6' y='4' width='1' height='1'/><rect x='1' y='2' width='1' height='1'/><rect x='3' y='2' width='1' height='1'/><rect x='5' y='2' width='1' height='1'/><rect x='7' y='2' width='1' height='1'/><rect x='1' y='6' width='1' height='1'/><rect x='3' y='6' width='1' height='1'/><rect x='5' y='6' width='1' height='1'/><rect x='7' y='6' width='1' height='1'/></svg>");
+    }
+  }
+}
+
+@mixin halftone-thin() {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='black' width='8' height='8'><rect x='0' y='0' width='1' height='1'/><rect x='4' y='0' width='1' height='1'/><rect x='2' y='4' width='1' height='1'/><rect x='6' y='4' width='1' height='1'/></svg>");
+  background-size: 9px;
+
+  @for $i from 1 through 3 {
+    .color-#{$i} & {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='#{encodecolor(nth($colors-front, $i))}' width='8' height='8'><rect x='0' y='0' width='1' height='1'/><rect x='4' y='0' width='1' height='1'/><rect x='2' y='4' width='1' height='1'/><rect x='6' y='4' width='1' height='1'/></svg>");
+    }
+  }
+}
+
+@mixin lines() {
+  height: 12px;
+
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' stroke='black' width='10' height='10'><path d='M0,1 H10 M0,3 H10 M0,5 H10 M0,7 H10 M0,9 H10'/></svg>");
+  background-size: auto 100%;
+
+  @for $i from 1 through 3 {
+    .color-#{$i} & {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' stroke='#{encodecolor(nth($colors-front, $i))}' width='10' height='10'><path d='M0,1 H10 M0,3 H10 M0,5 H10 M0,7 H10 M0,9 H10'/></svg>");
+    }
+  }
+}
