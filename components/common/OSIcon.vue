@@ -60,6 +60,7 @@ export default {
   height: 120px;
 
   cursor: pointer;
+  touch-action: manipulation;
 
   &-image {
     position: relative;
