@@ -167,8 +167,8 @@ export default {
 .floating {
   position: absolute;
 
-  top: 50px;
-  right: 30px;
+  bottom: 20px;
+  right: 20px;
 
   background-color: var(--color-back);
   border: 1px solid var(--color-front);
@@ -192,6 +192,11 @@ export default {
         padding: 0 0 6px;
       }
     }
+  }
+
+  @include tablet {
+    top: 50px;
+    right: 30px;
   }
 }
 </style>
