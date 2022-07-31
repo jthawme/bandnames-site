@@ -197,6 +197,7 @@ export default {
   @include tablet {
     top: 50px;
     right: 30px;
+    bottom: auto;
   }
 }
 </style>
