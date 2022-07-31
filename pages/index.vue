@@ -8,33 +8,35 @@
       @open="dblclick"
     />
 
-    <BoxContainer
-      v-if="isOpen('bandnames.csv')"
-      id="bandnames.csv"
-      title="bandnames.csv"
-      :initial-x="250"
-      :initial-y="50"
-      window-id="bandnames.csv"
-      class="excel"
-      can-close
-      @close="onClose"
-    >
-      <Spreadsheet :with-help="true" />
-    </BoxContainer>
+    <client-only>
+      <BoxContainer
+        v-if="isOpen('bandnames.csv')"
+        id="bandnames.csv"
+        title="bandnames.csv"
+        :initial-x="250"
+        :initial-y="50"
+        window-id="bandnames.csv"
+        class="excel"
+        can-close
+        @close="onClose"
+      >
+        <Spreadsheet :with-help="true" />
+      </BoxContainer>
 
-    <BoxContainer
-      v-if="isOpen('plural-bandnames.csv')"
-      id="plural-bandnames.csv"
-      title="plural-bandnames.csv"
-      :initial-x="130"
-      :initial-y="90"
-      window-id="plural-bandnames.csv"
-      class="excel"
-      can-close
-      @close="onClose"
-    >
-      <Spreadsheet plural />
-    </BoxContainer>
+      <BoxContainer
+        v-if="isOpen('plural-bandnames.csv')"
+        id="plural-bandnames.csv"
+        title="plural-bandnames.csv"
+        :initial-x="130"
+        :initial-y="90"
+        window-id="plural-bandnames.csv"
+        class="excel"
+        can-close
+        @close="onClose"
+      >
+        <Spreadsheet plural />
+      </BoxContainer>
+    </client-only>
 
     <AboutWindow v-if="isOpen('about')" @close="onClose" />
 
