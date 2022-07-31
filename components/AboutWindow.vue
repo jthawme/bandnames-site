@@ -31,8 +31,11 @@
       </p>
 
       <p>
-        Get the code for the site <a href="#" target="_blank">here</a> and the
-        lookup script <a href="#" target="_blank">here (messy)</a>.
+        Get the code for the site
+        <a href="https://github.com/jthawme/bandnames-site" target="_blank"
+          >here</a
+        >
+        and the lookup script <a href="#" target="_blank">here (messy)</a>.
       </p>
 
       <h5>Disclaimer</h5>
