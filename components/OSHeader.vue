@@ -4,8 +4,11 @@
       <span class="item logo">
         <Icon name="logo" class="logo-image" />
       </span>
-      <div v-for="(item, idx) in links" :key="idx" class="item">
-        <span>{{ item.text }}</span>
+      <div v-for="({ click, ...item }, idx) in links" :key="idx" class="item">
+        <a v-if="click" :href="twitterURL" target="_blank" @click="click">{{
+          item.text
+        }}</a>
+        <span v-else>{{ item.text }}</span>
 
         <div v-if="item.items" class="item-links">
           <div v-for="({ click, ...sub }, subidx) in item.items" :key="subidx">
@@ -36,10 +39,19 @@ import { EventBus } from "~/assets/js/comms";
 export default {
   data() {
     return {
-      time: Date.now()
+      time: Date.now(),
+      text:
+        "A list containing all single word dictionary band names available. Claim yours now!",
+      url: "https://bandnames.jthaw.club",
+      via: "jthawme"
     };
   },
   computed: {
+    twitterURL() {
+      return `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        this.text
+      )}&url=${encodeURIComponent(this.url)}&via=${this.via}`;
+    },
     timeDisplay() {
       return this.formatter.format(this.time);
     },
@@ -78,6 +90,10 @@ export default {
               click: () => this.$store.commit("cycleColor")
             }
           ]
+        },
+        {
+          text: "Share",
+          click: this.onShare.bind(this)
         }
       ];
 
@@ -122,6 +138,20 @@ export default {
     },
     onRandomWord() {
       EventBus.$emit("random", this.activeWindow);
+    },
+    async onShare(e) {
+      if (navigator.share) {
+        e.preventDefault();
+        try {
+          await navigator.share({
+            text: this.text,
+            url: this.url,
+            title: "Last Years Singles"
+          });
+        } catch {
+          window.open(this.twitterURL, "_blank");
+        }
+      }
     }
   }
 };
@@ -157,6 +187,10 @@ header {
   padding-right: 8px;
   cursor: default;
 
+  > a {
+    text-decoration: none;
+  }
+
   &.active,
   &:hover {
     background-color: var(--color-front);
@@ -176,7 +210,7 @@ header {
 
     display: none;
 
-    z-index: 10;
+    z-index: 100;
   }
 
   &:hover {
