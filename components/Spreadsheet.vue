@@ -1,10 +1,8 @@
 <template>
   <div class="outer">
-    <div v-if="withHelp" class="floating">
+    <div v-if="hasInnerSlot" class="floating">
       <div class="floating-inner">
-        <p>Click any row for info about the word</p>
-        <p>Or click the button for a random word</p>
-        <OSButton @click.native="randomWord($parent.windowId)">Random</OSButton>
+        <slot name="inner" />
       </div>
     </div>
 
@@ -24,11 +22,15 @@
       v-slot="{ item, index }"
       ref="scroller"
       class="scroller"
-      :items="list"
-      :item-size="32"
+      :items="wordList"
+      :item-size="33"
       key-field="word"
     >
-      <div class="row" @click="openWord(item.word)">
+      <div
+        class="row"
+        :class="{ saved: hasSaved(item.word) }"
+        @click="openWord(item.word)"
+      >
         <div class="cell cell-num">{{ index + 1 }}</div>
         <div class="cell cell-word">
           {{ plural ? `The ${item.word}` : item.word }}
@@ -61,9 +63,9 @@ export default {
       type: Boolean,
       default: false
     },
-    withHelp: {
-      type: Boolean,
-      default: false
+    words: {
+      type: Array,
+      default: null
     }
   },
   data() {
@@ -73,6 +75,16 @@ export default {
     };
   },
   computed: {
+    wordList() {
+      if (this.words) {
+        return this.words;
+      }
+
+      return this.list;
+    },
+    hasInnerSlot() {
+      return !!this.$slots.inner;
+    },
     displayEmptyCells() {
       if (this.isTabletAndAbove) {
         return this.emptyCells;
@@ -88,6 +100,9 @@ export default {
     EventBus.$off("random", this.randomWord);
   },
   methods: {
+    hasSaved(word) {
+      return this.words ? false : this.$store.state.savedWords.includes(word);
+    },
     randomWord(data) {
       if (data === this.$parent.windowId) {
         const idx = Math.floor(this.list.length * Math.random());
@@ -127,6 +142,10 @@ export default {
   &:not(.row-header):hover {
     color: var(--color-back);
     background-color: var(--color-front);
+  }
+
+  &.saved {
+    @include halftone;
   }
 }
 
@@ -176,6 +195,8 @@ export default {
   z-index: 3;
 
   @include halftone-thin;
+
+  max-width: 35%;
 
   padding: 10px;
   font-size: 12px;

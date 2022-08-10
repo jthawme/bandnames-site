@@ -1,5 +1,9 @@
 <template>
   <div class="wrapper">
+    <button class="btn" @click.prevent="$store.commit('toggleSavedWord', word)">
+      {{ isSaved ? "Remove save" : "Save word" }}
+    </button>
+
     <span class="word">{{ word }}</span>
 
     <div v-if="loading">
@@ -36,6 +40,11 @@ export default {
       meanings: []
     };
   },
+  computed: {
+    isSaved() {
+      return this.$store.state.savedWords.includes(this.word);
+    }
+  },
   mounted() {
     this.getWord();
   },
@@ -58,7 +67,37 @@ export default {
 
 <style lang="scss" scoped>
 .wrapper {
+  position: relative;
+
+  padding: 40px 10px 10px;
+}
+
+.btn {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+
   padding: 10px;
+
+  -webkit-appearance: none;
+
+  border: none;
+
+  background-color: var(--color-front);
+  color: var(--color-back);
+
+  cursor: pointer;
+
+  border-bottom: 1px solid var(--color-front);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-front);
+    background-color: var(--color-back);
+  }
 }
 
 .phonetic {

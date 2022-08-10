@@ -20,7 +20,15 @@
         can-close
         @close="onClose"
       >
-        <Spreadsheet :with-help="true" />
+        <Spreadsheet>
+          <template v-slot:inner>
+            <p>Click any row for info about the word</p>
+            <p>Or click the button for a random word</p>
+            <OSButton @click.native="randomWord('bandnames.csv')"
+              >Random</OSButton
+            >
+          </template>
+        </Spreadsheet>
       </BoxContainer>
 
       <BoxContainer
@@ -35,6 +43,28 @@
         @close="onClose"
       >
         <Spreadsheet plural />
+      </BoxContainer>
+
+      <BoxContainer
+        v-if="isOpen('possible-names.csv')"
+        id="possible-names.csv"
+        title="possible-names.csv"
+        :initial-x="40"
+        :initial-y="30"
+        window-id="possible-names.csv"
+        class="excel"
+        can-close
+        @close="onClose"
+      >
+        <Spreadsheet :words="savedWords">
+          <template v-slot:inner
+            ><div v-if="savedWords.length === 0">
+              <p>
+                Add saved words, by clicking a word,then pressing 'save word'.
+              </p>
+            </div></template
+          >
+        </Spreadsheet>
       </BoxContainer>
     </client-only>
 
@@ -64,12 +94,18 @@ import Spreadsheet from "~/components/Spreadsheet.vue";
 import AboutIcon from "~/assets/img/about.svg?inline";
 import CsvIcon from "~/assets/img/csv.svg?inline";
 import OSIcon from "~/components/common/OSIcon.vue";
+import { EventBus } from "~/assets/js/comms";
 
 export default {
-  components: { Spreadsheet, AboutWindow, HelpWindow, CsvIcon, OSIcon },
-  data() {
-    return {
-      icons: [
+  components: { Spreadsheet, AboutWindow, HelpWindow, OSIcon },
+  computed: {
+    savedWords() {
+      return this.$store.state.savedWords.map(word => ({
+        word
+      }));
+    },
+    icons() {
+      return [
         {
           icon: CsvIcon,
           text: "bandnames.csv",
@@ -80,15 +116,25 @@ export default {
           text: "plural-bandnames.csv",
           dblclick: () => this.openWindow("plural-bandnames.csv")
         },
+        this.savedWords.length > 0
+          ? {
+              icon: CsvIcon,
+              text: "possible-names.csv",
+              dblclick: () => this.openWindow("possible-names.csv")
+            }
+          : false,
         {
           icon: AboutIcon,
           text: "About",
           dblclick: () => this.openWindow("about")
         }
-      ]
-    };
+      ].filter(item => !!item);
+    }
   },
   methods: {
+    randomWord(id) {
+      EventBus.$emit("random", id);
+    },
     openWindow(id) {
       this.$store.commit("setWindowState", {
         id,

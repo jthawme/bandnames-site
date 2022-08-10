@@ -11,6 +11,7 @@
 <script>
 import smoothscroll from "smoothscroll-polyfill";
 import {
+  getItem,
   onWindowResize,
   registerBootlegVH,
   tickUpdate
@@ -38,6 +39,11 @@ export default {
     this.onResize();
 
     onWindowResize(tickUpdate(this.onResize.bind(this)));
+
+    this.$store.commit(
+      "populateSavedWords",
+      getItem("possible", item => JSON.parse(item), [])
+    );
   },
   methods: {
     onResize() {

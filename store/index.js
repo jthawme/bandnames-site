@@ -1,3 +1,5 @@
+import { saveItem } from "~/assets/js/utils";
+
 export const state = () => {
   return {
     endpoint: "",
@@ -10,11 +12,13 @@ export const state = () => {
     windows: {
       "bandnames.csv": true,
       "plural-bandnames.csv": false,
+      "possible-names.csv": false,
       about: false,
       help: true
     },
     windowOrder: ["bandnames.csv", "help"],
-    color: 0
+    color: 0,
+    savedWords: []
   };
 };
 
@@ -39,6 +43,10 @@ export const mutations = {
     if (!words.includes(val)) {
       state.activeWords = [val, ...words].reverse();
       state.windowOrder = [...state.windowOrder, val];
+    } else {
+      const windowOrder = state.windowOrder.slice();
+      windowOrder.splice(windowOrder.indexOf(val), 1);
+      state.windowOrder = [...windowOrder, val];
     }
   },
   removeWord(state, val) {
@@ -74,6 +82,23 @@ export const mutations = {
   },
   cycleColor(state) {
     state.color = (state.color + 1) % 4;
+  },
+
+  toggleSavedWord(state, word) {
+    const words = state.savedWords.slice();
+
+    if (words.includes(word)) {
+      words.splice(words.indexOf(word), 1);
+      state.savedWords = words;
+    } else {
+      state.savedWords = [...words, word];
+    }
+
+    saveItem("possible", JSON.stringify(state.savedWords));
+  },
+
+  populateSavedWords(state, val) {
+    state.savedWords = val.slice();
   }
 };
 

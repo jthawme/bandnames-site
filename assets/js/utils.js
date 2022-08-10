@@ -266,3 +266,13 @@ export const isLowPower = () => {
       return true;
     });
 };
+
+export const saveItem = (key, val) => {
+  localStorage.setItem(`bandnames-${key}`, val);
+};
+
+export const getItem = (key, transform = item => item, def = null) => {
+  const data = localStorage.getItem(`bandnames-${key}`);
+
+  return data ? transform(data) : def;
+};
